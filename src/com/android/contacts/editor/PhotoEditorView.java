@@ -144,6 +144,20 @@ public class PhotoEditorView extends RelativeLayout implements View.OnClickListe
         adjustDimensions();
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // Its height from its width from the first measure, as adjustDimensions sets it at the
+        // first draw: as tall as the screen until then, the first field focused before that lay
+        // a screen down, and the editor opened scrolled past most of the photo
+        final int width = MeasureSpec.getSize(widthMeasureSpec);
+        if (!mIsTwoPanel && width > 0
+                && MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY) {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                    (int) (width / mPortraitPhotoRatio), MeasureSpec.EXACTLY);
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
     private void adjustDimensions() {
         // Follow the same logic as MultiShrinkScroll.initialize
         SchedulingUtils.doOnPreDraw(this, /* drawNextFrame =*/ false, new Runnable() {
