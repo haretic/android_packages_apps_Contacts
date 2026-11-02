@@ -64,7 +64,9 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
@@ -632,22 +634,14 @@ class AccountTypeManagerImpl extends AccountTypeManager
                         Preconditions.checkArgument(
                                 input.size() == 3, "List should have exactly 3 elements");
 
+                        // The device account may also be returned by the local account locator.
+                        final Set<AccountWithDataSet> accounts = new LinkedHashSet<>();
+                        for (List<AccountWithDataSet> accountList : input) {
+                            accounts.addAll(accountList);
+                        }
+
                         final List<AccountInfo> result = new ArrayList<>();
-                        for (AccountWithDataSet account : input.get(0)) {
-                            result.add(
-                                    typeProvider
-                                            .getTypeForAccount(account)
-                                            .wrapAccount(mContext, account));
-                        }
-
-                        for (AccountWithDataSet account : input.get(1)) {
-                            result.add(
-                                    typeProvider
-                                            .getTypeForAccount(account)
-                                            .wrapAccount(mContext, account));
-                        }
-
-                        for (AccountWithDataSet account : input.get(2)) {
+                        for (AccountWithDataSet account : accounts) {
                             result.add(
                                     typeProvider
                                             .getTypeForAccount(account)

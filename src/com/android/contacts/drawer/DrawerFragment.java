@@ -295,6 +295,12 @@ public class DrawerFragment extends Fragment implements AccountsListener {
         }
     };
 
+    public void focusFirstItem() {
+        mDrawerListView.requestFocus();
+        // ListView selects the first enabled row, skipping the top spacer.
+        mDrawerListView.setSelection(0);
+    }
+
     public void setNavigationItemChecked(ContactsView contactsView) {
         mCurrentContactsView = contactsView;
         if (mDrawerAdapter != null) {

@@ -70,6 +70,7 @@ import com.android.contacts.group.GroupListItem;
 import com.android.contacts.group.GroupMembersFragment;
 import com.android.contacts.group.GroupNameEditDialogFragment;
 import com.android.contacts.group.GroupUtil;
+import com.android.contacts.interactions.ImportDialogFragment;
 import com.android.contacts.list.AccountFilterActivity;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.list.ContactListFilterController;
@@ -88,6 +89,7 @@ import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.preference.ContactsPreferenceActivity;
 import com.android.contacts.util.AccountFilterUtil;
+import com.android.contacts.util.AccountSelectionUtil;
 import com.android.contacts.util.Constants;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contacts.util.MaterialColorMapUtils;
@@ -278,7 +280,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 SharedPreferenceUtil.setHamburgerMenuClickedBefore(PeopleActivity.this);
                 mMenuClickedBefore = true;
             }
-            drawerView.requestFocus();
+            mDrawerFragment.focusFirstItem();
             invalidateOptionsMenu();
             // Stop search and selection mode like Gmail and Keep. Otherwise, if user switches to
             // another fragment in navigation drawer, the current search/selection mode will be
@@ -1155,6 +1157,13 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     // Implementation of SelectAccountDialogFragment.Listener
     @Override
     public void onAccountChosen(AccountWithDataSet account, Bundle extraArgs) {
+        // The account selector is shared by imports and label creation.
+        if (extraArgs != null && extraArgs.containsKey(ImportDialogFragment.KEY_RES_ID)) {
+            AccountSelectionUtil.doImport(this,
+                    extraArgs.getInt(ImportDialogFragment.KEY_RES_ID), account,
+                    extraArgs.getInt(ImportDialogFragment.KEY_SUBSCRIPTION_ID, -1));
+            return;
+        }
         mNewGroupAccount = account;
         GroupNameEditDialogFragment.newInstanceForCreation(
                 mNewGroupAccount, GroupUtil.ACTION_CREATE_GROUP)

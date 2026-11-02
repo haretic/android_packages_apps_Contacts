@@ -203,6 +203,20 @@ public class DrawerAdapter extends BaseAdapter {
         return  mItemsList.size();
     }
 
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        // ListView must skip decorative rows during keyboard navigation.
+        final int viewType = getItemViewType(position);
+        return viewType != VIEW_TYPE_NAV_SPACER
+                && viewType != VIEW_TYPE_NAV_DIVIDER
+                && viewType != VIEW_TYPE_HEADER_ITEM;
+    }
+
     public BaseDrawerItem getItem(int position) {
         return mItemsList.get(position);
     }
