@@ -1043,7 +1043,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     // Reset toolbar and status bar color to Contacts theme color.
     private void resetToolBarStatusBarColor() {
         findViewById(R.id.toolbar_frame).setBackgroundColor(
-                ContextCompat.getColor(this, R.color.primary_color));
+                ContextCompat.getColor(this, R.color.toolbar_background_color));
         updateStatusBarBackground(ContextCompat.getColor(this, R.color.primary_color_dark));
     }
 
